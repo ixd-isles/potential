@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<title>Torque illustration map</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="jquery/jquery-1.6.4.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+    <link href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" rel="stylesheet">
+
+  <!-- include cartodb.js library -->
+    <script src="https://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+
+	<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+
+
+<style>
+ #map {width:100%; height:600px} 
+		
+</style>
+
+</head>				
+	
+<body>
+ <div id="map"></div>
+
+<script>
+      function main() {
+        cartodb.createVis('map', 'https://trenton-downtown.carto.com/api/v2/viz/59142a2e-dc0a-416b-8843-f711517a34e2/viz.json', {
+            shareable: false,
+            title: false,
+            description: false,
+            search: false,
+            tiles_loader: true,
+            center_lat: 40.2206,
+            center_lon: -74.7597,
+            zoom: 13,
+			time_slider:false
+        })
+        .done(function(vis, layers) {
+          // layer 0 is the base layer, layer 1 is cartodb layer
+          // setInteraction is disabled by default
+          layers[1].setInteraction(false);
+          layers[1].on('featureOver', function(e, latlng, pos, data) {
+            cartodb.log.log(e, latlng, pos, data);
+          });
+
+          // you can get the native map to work with it
+          var map = vis.getNativeMap();
+
+          // now, perform any operations you need
+          // map.setZoom(3);
+          // map.panTo([50.5, 30.5]);
+        })
+        .error(function(err) {
+          console.log(err);
+        });
+      }
+
+      window.onload = main;
+    </script>
+
+</body>
+</html>
